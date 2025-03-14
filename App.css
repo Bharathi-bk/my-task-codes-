@@ -1,71 +1,83 @@
+/* Make sure the body and html take the full height of the viewport */
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+}
+
+/* Container styles */
 .container {
-  width: 60%;
-  margin: 0 auto;
+  width: 400px; /* Set a max-width for the to-do list container */
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: #fff;
   border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 h1 {
-  text-align: center;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
   margin-bottom: 20px;
 }
 
-form div {
-  margin-bottom: 10px;
+/* Form styles */
+form {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
 
 form input {
+  width: 75%;
   padding: 8px;
-  margin-top: 5px;
-  width: 100%;
   border-radius: 4px;
   border: 1px solid #ddd;
 }
 
-button {
-  padding: 10px;
+form button {
+  padding: 8px 12px;
+  border: none;
   background-color: #4caf50;
   color: white;
-  border: none;
-  border-radius: 4px;
   cursor: pointer;
+  border-radius: 4px;
 }
 
-button:hover {
+form button:hover {
   background-color: #45a049;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+/* To-Do List Styling */
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
 
-th, td {
+ul li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 10px;
-  border: 1px solid #ddd;
-  text-align: center;
+  border-bottom: 1px solid #ddd;
 }
 
-th {
-  background-color: #f2f2f2;
+ul li.completed {
+  text-decoration: line-through;
+  color: #999;
 }
 
-button {
-  padding: 5px 10px;
+ul li button {
+  padding: 5px;
   background-color: #f44336;
-  border: none;
   color: white;
+  border: none;
   cursor: pointer;
-  margin: 5px;
+  border-radius: 4px;
 }
 
-button:hover {
+ul li button:hover {
   background-color: #e53935;
 }
