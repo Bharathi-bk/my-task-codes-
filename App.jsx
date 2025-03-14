@@ -2,59 +2,138 @@ import React, { useState } from "react";
 import "./App.css";
 
 const App = () => {
-  // State to hold the to-do list and the new task input value
-  const [todos, setTodos] = useState([]);
-  const [newTodo, setNewTodo] = useState("");
+  const [formData, setFormData] = useState({
+    productCode: "",
+    product: "",
+    qty: "",
+    perPrice: "",
+  });
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [dataList, setDataList] = useState([]);
 
-  // Function to handle form submission
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (newTodo.trim() === "") return; // Prevent empty tasks from being added
-
-    // Add the new task to the list
-    setTodos([
-      ...todos,
-      { id: Date.now(), text: newTodo, completed: false },
-    ]);
-
-    setNewTodo(""); // Clear input after submission
+    if (selectedRow === null) {
+      insertNewRecord(formData);
+    } else {
+      updateRecord(formData);
+    }
+    resetForm();
   };
 
-  // Function to toggle the completion status of a task
-  const toggleCompletion = (id) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+  const insertNewRecord = (data) => {
+    setDataList([...dataList, { ...data, id: Date.now() }]);
+  };
+
+  const onEdit = (id) => {
+    const record = dataList.find((item) => item.id === id);
+    setFormData({ ...record });
+    setSelectedRow(id);
+  };
+
+  const updateRecord = (updatedData) => {
+    setDataList(
+      dataList.map((item) =>
+        item.id === selectedRow ? { ...updatedData, id: selectedRow } : item
       )
     );
+    setSelectedRow(null);
   };
 
-  // Function to delete a task
-  const deleteTodo = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+  const onDelete = (id) => {
+    if (window.confirm("Do you want to delete this record?")) {
+      setDataList(dataList.filter((item) => item.id !== id));
+      resetForm();
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      productCode: "",
+      product: "",
+      qty: "",
+      perPrice: "",
+    });
+    setSelectedRow(null);
   };
 
   return (
     <div className="container">
-      <h1>To-Do List</h1>
+      <h1>Product Form</h1>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Add a new task"
-          value={newTodo}
-          onChange={(e) => setNewTodo(e.target.value)}
-        />
-        <button type="submit">Add</button>
+        <div>
+          <label>Product Code</label>
+          <input
+            type="text"
+            name="productCode"
+            value={formData.productCode}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label>Product</label>
+          <input
+            type="text"
+            name="product"
+            value={formData.product}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label>Quantity</label>
+          <input
+            type="number"
+            name="qty"
+            value={formData.qty}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label>Price</label>
+          <input
+            type="number"
+            name="perPrice"
+            value={formData.perPrice}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <button type="submit">{selectedRow ? "Update" : "Add"} Record</button>
       </form>
 
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id} className={todo.completed ? "completed" : ""}>
-            <span onClick={() => toggleCompletion(todo.id)}>{todo.text}</span>
-            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+      <table id="storeList">
+        <thead>
+          <tr>
+            <th>Product Code</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {dataList.map((item) => (
+            <tr key={item.id}>
+              <td>{item.productCode}</td>
+              <td>{item.product}</td>
+              <td>{item.qty}</td>
+              <td>{item.perPrice}</td>
+              <td>
+                <button onClick={() => onEdit(item.id)}>Edit</button>
+                <button onClick={() => onDelete(item.id)}>Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
